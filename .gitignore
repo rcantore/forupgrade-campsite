@@ -42,6 +42,7 @@ target/
 # generated files
 bin/
 gen/
+out/
 
 #Gradle
 .gradletasknamecache

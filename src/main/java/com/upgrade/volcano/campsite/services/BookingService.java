@@ -1,7 +1,6 @@
 package com.upgrade.volcano.campsite.services;
 
 import com.upgrade.volcano.campsite.dtos.BookingDTO;
-import com.upgrade.volcano.campsite.dtos.CampsiteDTO;
 import com.upgrade.volcano.campsite.entities.Booking;
 import com.upgrade.volcano.campsite.entities.Campsite;
 import com.upgrade.volcano.campsite.entities.repositories.BookingRepository;
@@ -78,12 +77,22 @@ public class BookingService {
             Campsite availableCampsite = campsite.get();
             mappedBooking.setCampsite(availableCampsite);
 
-            Booking storedBooking = bookingRepository.getOne(bookingDTO.getId());
-
             bookingRepository.save(mappedBooking);
 
-//            availableCampsite.getBookings().add(mappedBooking);
-//            campsiteRepository.save(availableCampsite);
+        }
+
+    }
+
+    public void deleteBookingForCampsiteId(Long bookingId, Long campsiteId) {
+        Optional<Campsite> campsite = campsiteRepository.findById(campsiteId);
+        if (campsite.isPresent()) {
+            Campsite availableCampsite = campsite.get();
+
+            availableCampsite.getBookings().removeIf(booking -> booking.getId() == bookingId);
+            campsiteRepository.save(availableCampsite);
+
+            bookingRepository.deleteById(bookingId);
+
         }
 
     }

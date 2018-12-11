@@ -71,4 +71,15 @@ public class BookingController {
 
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping(path = "/campsites/{campsiteId}/bookings/{bookingId}")
+    public @ResponseBody ResponseEntity deleteBookinfForCampsite(
+            @PathVariable(name = "campsiteId") Long campsiteId,
+            @PathVariable(name = "bookingId") Long bookingId) {
+
+        bookingService.deleteBookingForCampsiteId(bookingId, campsiteId);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

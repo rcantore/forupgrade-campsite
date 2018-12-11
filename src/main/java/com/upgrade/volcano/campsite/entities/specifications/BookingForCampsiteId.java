@@ -8,10 +8,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class BookingSpecification implements Specification<Booking> {
-        private Long campsiteId;
+public class BookingForCampsiteId implements Specification<Booking> {
+    private Long campsiteId;
 
-    public BookingSpecification(Long campsiteId) {
+    public BookingForCampsiteId(Long campsiteId) {
         this.campsiteId = campsiteId;
     }
 

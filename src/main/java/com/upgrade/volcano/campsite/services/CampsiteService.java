@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CampsiteService {
@@ -17,6 +18,19 @@ public class CampsiteService {
     CampsiteRepository campsiteRepository;
 
     public List<CampsiteDTO> getAllCampsite() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        List<CampsiteDTO> campsiteDTOS = new ArrayList<>();
+        List<Campsite> campsiteList = campsiteRepository.findAll();
+        campsiteList.forEach(campsite -> campsiteDTOS.add(modelMapper.map(campsite, CampsiteDTO.class)));
+
+        return campsiteDTOS;
+    }
+
+
+    public List<CampsiteDTO> getAvailabilityForCampsiteId(Long campsiteId) {
+        Optional<Campsite> optionalCampsite = campsiteRepository.findById(campsiteId);
+
         ModelMapper modelMapper = new ModelMapper();
 
         List<CampsiteDTO> campsiteDTOS = new ArrayList<>();

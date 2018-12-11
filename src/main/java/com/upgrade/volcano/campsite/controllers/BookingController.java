@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,7 +41,7 @@ public class BookingController {
     }
 
     @GetMapping(path = "/campsites/{id}/bookings")
-    public ResponseEntity<List<BookingDTO>> getAllBookingsForCamspite(@PathVariable(name = "id") Long campsiteId) {
+    public ResponseEntity<List<BookingDTO>> getAllBookingsForCampsite(@PathVariable(name = "id") Long campsiteId) {
         //TODO add filtering
         List<BookingDTO> bookingList = bookingService.getAllBookingsForCampsiteId(campsiteId);
 
@@ -53,5 +50,25 @@ public class BookingController {
         }
 
         return ResponseEntity.ok(bookingList);
+    }
+
+    @PostMapping(path = "/campsites/{id}/bookings")
+    public @ResponseBody ResponseEntity createNewBookingForCampsite(@PathVariable(name = "id") Long campsiteId, @RequestBody BookingDTO booking ) {
+
+        bookingService.createBookingForCampsiteId(booking, campsiteId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/campsites/{campsiteId}/bookings/{bookingId}")
+    public @ResponseBody ResponseEntity updateBookingForCampsite(
+            @PathVariable(name = "campsiteId") Long campsiteId,
+            @PathVariable(name = "bookingId") Long bookingId,
+            @RequestBody BookingDTO booking ) {
+
+        booking.setId(bookingId);
+        bookingService.updateBookingForCampsiteId(booking, campsiteId);
+
+        return ResponseEntity.ok().build();
     }
 }

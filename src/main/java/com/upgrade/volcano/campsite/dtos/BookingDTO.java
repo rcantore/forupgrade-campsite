@@ -66,4 +66,16 @@ public class BookingDTO {
     public void setCheckoutDateTime(LocalDateTime checkoutDateTime) {
         this.checkoutDateTime = checkoutDateTime;
     }
+
+    @Override
+    public String toString() {
+        return "BookingDTO{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", campsite=" + campsite +
+                ", checkInDateTime=" + checkInDateTime +
+                ", checkoutDateTime=" + checkoutDateTime +
+                '}';
+    }
 }

@@ -1,7 +1,8 @@
 package com.upgrade.volcano.campsite.controllers;
 
-import com.upgrade.volcano.campsite.entities.Campsite;
-import com.upgrade.volcano.campsite.entities.repositories.CampsiteRepository;
+import com.upgrade.volcano.campsite.dtos.CampsiteDTO;
+import com.upgrade.volcano.campsite.services.BookingService;
+import com.upgrade.volcano.campsite.services.CampsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,15 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController("/campsites")
+@RestController
 public class CampsiteController {
     @Autowired
-    CampsiteRepository campsiteRepository;
+    CampsiteService campsiteService;
 
-    @GetMapping
-    public ResponseEntity<List<Campsite>> getAllCampsites() {
+    @Autowired
+    BookingService bookingService;
+
+    @GetMapping(path = "/campsites")
+    public ResponseEntity<List<CampsiteDTO>> getAllCampsites() {
         //TODO add filtering
-        List<Campsite> campsiteList = campsiteRepository.findAll();
+        List<CampsiteDTO> campsiteList = campsiteService.getAllCampsite();
 
         if (campsiteList == null) {
             return ResponseEntity.notFound().build();
@@ -25,4 +29,5 @@ public class CampsiteController {
 
         return ResponseEntity.ok(campsiteList);
     }
+
 }

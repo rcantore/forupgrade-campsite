@@ -1,29 +1,30 @@
-package com.upgrade.volcano.campsite.entities;
+package com.upgrade.volcano.campsite.dtos;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.upgrade.volcano.campsite.utils.CustomCampsiteDTOSerializer;
+
 import java.time.LocalDateTime;
 
-@Entity
-public class Booking extends AbstractEntity {
-
-    @ManyToOne
-    private Campsite campsite;
+public class BookingDTO {
+    private Long id;
 
     private String fullName;
 
     private String email;
 
+    @JsonSerialize(using = CustomCampsiteDTOSerializer.class)
+    private CampsiteDTO campsite;
+
     private LocalDateTime checkInDateTime;
 
     private LocalDateTime checkoutDateTime;
 
-    public Campsite getCampsite() {
-        return campsite;
+    public Long getId() {
+        return id;
     }
 
-    public void setCampsite(Campsite campsite) {
-        this.campsite = campsite;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFullName() {
@@ -42,6 +43,14 @@ public class Booking extends AbstractEntity {
         this.email = email;
     }
 
+    public CampsiteDTO getCampsite() {
+        return campsite;
+    }
+
+    public void setCampsite(CampsiteDTO campsite) {
+        this.campsite = campsite;
+    }
+
     public LocalDateTime getCheckInDateTime() {
         return checkInDateTime;
     }
@@ -57,5 +66,4 @@ public class Booking extends AbstractEntity {
     public void setCheckoutDateTime(LocalDateTime checkoutDateTime) {
         this.checkoutDateTime = checkoutDateTime;
     }
-
 }

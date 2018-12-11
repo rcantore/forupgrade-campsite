@@ -8,6 +8,7 @@ import com.upgrade.volcano.campsite.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,9 +56,17 @@ public class BookingController {
     @PostMapping(path = "/campsites/{id}/bookings")
     public @ResponseBody ResponseEntity createNewBookingForCampsite(@PathVariable(name = "id") Long campsiteId, @RequestBody BookingDTO booking ) {
 
-        bookingService.createBookingForCampsiteId(booking, campsiteId);
+        ResponseEntity responseEntity;
+        try {
+            BookingDTO bookingDTO = bookingService.createBookingForCampsiteId(booking, campsiteId);
+            responseEntity = ResponseEntity.ok(bookingDTO.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
 
-        return ResponseEntity.ok().build();
+
+        return responseEntity;
     }
 
     @PutMapping(path = "/campsites/{campsiteId}/bookings/{bookingId}")

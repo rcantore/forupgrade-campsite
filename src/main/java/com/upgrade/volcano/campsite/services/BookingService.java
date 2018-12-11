@@ -52,8 +52,9 @@ public class BookingService {
         return bookingsDTO;
     }
 
-    public void createBookingForCampsiteId(BookingDTO bookingDTO, Long campsiteId) {
+    public BookingDTO createBookingForCampsiteId(BookingDTO bookingDTO, Long campsiteId) throws Exception {
         Optional<Campsite> campsite = campsiteRepository.findById(campsiteId);
+        BookingDTO returnBooking = new BookingDTO();
         if (campsite.isPresent()) {
             ModelMapper modelMapper = new ModelMapper();
             Booking booking = modelMapper.map(bookingDTO, Booking.class);
@@ -64,8 +65,11 @@ public class BookingService {
             bookingRepository.save(booking);
             availableCampsite.getBookings().add(booking);
             campsiteRepository.save(availableCampsite);
+
+            returnBooking = modelMapper.map(booking, BookingDTO.class);
         }
 
+        return returnBooking;
     }
 
     public void updateBookingForCampsiteId(BookingDTO bookingDTO, Long campsiteId) {

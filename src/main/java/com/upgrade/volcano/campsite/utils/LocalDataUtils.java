@@ -38,10 +38,10 @@ public class LocalDataUtils {
     private void initDefaultBookingData() {
         Booking booking1 = new Booking();
 
-        LocalDateTime checkInTime = LocalDateTime.of(LocalDate.of(2019, 02, 22), LocalTime.of(12,00));
+        LocalDateTime checkInTime = LocalDateTime.of(LocalDate.of(2019, 02, 22), LocalTime.of(10,00));
         booking1.setCheckInDateTime(checkInTime);
 
-        LocalDateTime checkOutTime = LocalDateTime.of(LocalDate.of(2019, 02, 25), LocalTime.of(12,00));
+        LocalDateTime checkOutTime = LocalDateTime.of(LocalDate.of(2019, 02, 25), LocalTime.of(10,00));
         booking1.setCheckoutDateTime(checkOutTime);
 
         booking1.setEmail("somemail@somedomain.com");
@@ -51,10 +51,10 @@ public class LocalDataUtils {
 
         Booking booking2 = new Booking();
 
-        checkInTime = LocalDateTime.of(LocalDate.of(2019, 03, 01), LocalTime.of(12,00));
+        checkInTime = LocalDateTime.of(LocalDate.of(2019, 03, 01), LocalTime.of(10,00));
         booking2.setCheckInDateTime(checkInTime);
 
-        checkOutTime = LocalDateTime.of(LocalDate.of(2019, 03, 02), LocalTime.of(12,00));
+        checkOutTime = LocalDateTime.of(LocalDate.of(2019, 03, 02), LocalTime.of(10,00));
         booking2.setCheckoutDateTime(checkOutTime);
 
         booking2.setEmail("jdove@anotherdomain.com");

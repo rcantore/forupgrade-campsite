@@ -26,7 +26,7 @@ public class CustomCampsiteDTOSerializer extends StdSerializer<CampsiteDTO> {
             CampsiteDTO item,
             JsonGenerator generator,
             SerializerProvider provider)
-            throws IOException, JsonProcessingException {
+            throws IOException {
 
         generator.writeObject(item.getId());
     }

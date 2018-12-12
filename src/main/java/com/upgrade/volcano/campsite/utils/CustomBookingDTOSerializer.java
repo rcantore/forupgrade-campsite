@@ -25,7 +25,7 @@ public class CustomBookingDTOSerializer extends StdSerializer<List<BookingDTO>> 
             List<BookingDTO> items,
             JsonGenerator generator,
             SerializerProvider provider)
-            throws IOException, JsonProcessingException {
+            throws IOException {
 
         List<Long> ids = new ArrayList<>();
         for (BookingDTO item : items) {

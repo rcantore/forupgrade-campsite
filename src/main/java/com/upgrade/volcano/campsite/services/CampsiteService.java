@@ -57,8 +57,8 @@ public class CampsiteService {
                 checkoutDate = checkInDate.plusDays(30);
             }
 
-            LocalDateTime checkInDateTime = LocalDateTime.of(checkInDate, LocalTime.of(10, 00));
-            LocalDateTime checkoutDateTime = LocalDateTime.of(checkoutDate, LocalTime.of(10, 00));
+            LocalDateTime checkInDateTime = LocalDateTime.of(checkInDate, LocalTime.of(12, 00));
+            LocalDateTime checkoutDateTime = LocalDateTime.of(checkoutDate, LocalTime.of(12, 00));
 
             Specification<Booking> spec = Specification.where(new BookingForCampsiteId(campsiteId))
                     .and(new BookingBetweenDates(checkInDateTime, checkoutDateTime));

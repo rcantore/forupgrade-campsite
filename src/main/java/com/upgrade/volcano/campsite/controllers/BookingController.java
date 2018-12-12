@@ -57,6 +57,18 @@ public class BookingController {
         return ResponseEntity.ok(bookingList);
     }
 
+    @GetMapping(path = "/campsites/{id}/bookings/{bookingId}")
+    public ResponseEntity<BookingDTO> getBookingForCampsite(@PathVariable(name = "id") Long campsiteId,
+                                                                  @PathVariable(name = "bookingId") Long bookingId) {
+        BookingDTO booking = bookingService.getBookingForCampsiteId(campsiteId, bookingId);
+
+        if (booking == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(booking);
+    }
+
     @PostMapping(path = "/campsites/{id}/bookings")
     public @ResponseBody ResponseEntity createNewBookingForCampsite(@PathVariable(name = "id") Long campsiteId, @RequestBody BookingDTO booking ) {
 

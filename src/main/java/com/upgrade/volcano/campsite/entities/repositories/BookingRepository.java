@@ -13,4 +13,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 
     List<Booking> findAllByCampsiteId(Long id);
 
+    Booking findByCampsiteIdAndId(Long campsiteId, Long id);
+
 }

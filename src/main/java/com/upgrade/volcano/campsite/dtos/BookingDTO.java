@@ -1,5 +1,6 @@
 package com.upgrade.volcano.campsite.dtos;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.upgrade.volcano.campsite.utils.CustomCampsiteDTOSerializer;
 

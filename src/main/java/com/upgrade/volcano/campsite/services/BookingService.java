@@ -51,6 +51,14 @@ public class BookingService {
         return bookingsDTO;
     }
 
+    public BookingDTO getBookingForCampsiteId(Long id, Long bookingId) {
+        ModelMapper modelMapper = new ModelMapper();
+
+        Booking booking = bookingRepository.findByCampsiteIdAndId(id, bookingId);
+
+        return modelMapper.map(booking, BookingDTO.class);
+    }
+
     public List<BookingDTO> getAllBookings() {
         ModelMapper modelMapper = new ModelMapper();
 

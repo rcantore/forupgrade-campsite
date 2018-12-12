@@ -1,5 +1,6 @@
 package com.upgrade.volcano.campsite.controllers;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.upgrade.volcano.campsite.dtos.BookingDTO;
 import com.upgrade.volcano.campsite.entities.Booking;
 import com.upgrade.volcano.campsite.entities.ResultVO;
@@ -12,8 +13,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestController
@@ -95,6 +98,11 @@ public class BookingController {
         bookingService.deleteBookingForCampsiteId(bookingId, campsiteId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public final ResponseEntity<String> handleException(InvalidFormatException ex) {
+        return new ResponseEntity<>("Invalid format, please check your message", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

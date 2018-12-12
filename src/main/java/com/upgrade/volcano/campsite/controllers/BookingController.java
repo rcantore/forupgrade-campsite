@@ -2,6 +2,7 @@ package com.upgrade.volcano.campsite.controllers;
 
 import com.upgrade.volcano.campsite.dtos.BookingDTO;
 import com.upgrade.volcano.campsite.entities.Booking;
+import com.upgrade.volcano.campsite.entities.ResultVO;
 import com.upgrade.volcano.campsite.entities.specifications.BookingBetweenDates;
 import com.upgrade.volcano.campsite.entities.specifications.BookingForCampsiteId;
 import com.upgrade.volcano.campsite.services.BookingService;
@@ -58,8 +59,13 @@ public class BookingController {
 
         ResponseEntity responseEntity;
         try {
-            BookingDTO bookingDTO = bookingService.createBookingForCampsiteId(booking, campsiteId);
-            responseEntity = ResponseEntity.ok(bookingDTO.getId());
+            ResultVO resultVO = bookingService.createBookingForCampsiteId(booking, campsiteId);
+            if (resultVO.getErrors().isEmpty()) {
+                BookingDTO bookingDTO = (BookingDTO) resultVO.getData().get("return");
+                responseEntity = ResponseEntity.ok(bookingDTO.getId());
+            } else {
+                responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultVO.getErrors());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -8,7 +8,7 @@ public class CampingDateDTO {
 
     private LocalDateTime checkoutDateTime;
 
-    private BookingDTO booking;
+    private Long bookingId;
 
     private Boolean available;
 
@@ -28,16 +28,16 @@ public class CampingDateDTO {
         this.checkoutDateTime = checkoutDateTime;
     }
 
-    public BookingDTO getBooking() {
-        return booking;
+    public Long getBookingId() {
+        return bookingId;
     }
 
-    public void setBooking(BookingDTO booking) {
-        this.booking = booking;
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
     }
 
     public Boolean isAvailable() {
-        return this.booking == null;
+        return this.bookingId == null;
     }
 
     public void setAvailable(Boolean available) {

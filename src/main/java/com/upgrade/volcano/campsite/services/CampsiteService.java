@@ -18,11 +18,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class CampsiteService {
@@ -87,30 +84,14 @@ public class CampsiteService {
 
         if (bookingDTOList.isEmpty()) {
             for (int i = 0; i < ChronoUnit.DAYS.between(checkInDateTime, checkoutDateTime); i++) {
-                CampingDateDTO campingDateDTO = new CampingDateDTO();
-
-                LocalDateTime day = checkInDateTime.plusDays(i);
-                campingDateDTO.setCheckInDateTime(day);
-
-                LocalDateTime nextDay = checkInDateTime.plusDays(i + 1);
-                campingDateDTO.setCheckoutDateTime(nextDay);
-
-                campingDateList.add(campingDateDTO);
+                buildAndAddCampingDTO(campingDateList, checkInDateTime, i);
 
             }
         } else {
             LocalDateTime pivotLocalDateTime = checkInDateTime;
             for (BookingDTO bookingDTO : bookingDTOList) {
                 for (int i = 0; i < ChronoUnit.DAYS.between(pivotLocalDateTime, bookingDTO.getCheckInDateTime()) - 1; i++) {
-                    CampingDateDTO campingDateDTO = new CampingDateDTO();
-
-                    LocalDateTime day = pivotLocalDateTime.plusDays(i);
-                    campingDateDTO.setCheckInDateTime(day);
-
-                    LocalDateTime nextDay = pivotLocalDateTime.plusDays(i + 1);
-                    campingDateDTO.setCheckoutDateTime(nextDay);
-
-                    campingDateList.add(campingDateDTO);
+                    buildAndAddCampingDTO(campingDateList, pivotLocalDateTime, i);
 
                 }
 
@@ -124,7 +105,7 @@ public class CampsiteService {
                     LocalDateTime nextDay = pivotLocalDateTime.plusDays(i + 1);
                     campingDateDTO.setCheckoutDateTime(nextDay);
 
-                    campingDateDTO.setBooking(bookingDTO);
+                    campingDateDTO.setBookingId(bookingDTO.getId());
 
                     campingDateList.add(campingDateDTO);
 
@@ -133,21 +114,24 @@ public class CampsiteService {
             }
 
             for (int i = 0; i < ChronoUnit.DAYS.between(pivotLocalDateTime, checkoutDateTime); i++) {
-                CampingDateDTO campingDateDTO = new CampingDateDTO();
-
-                LocalDateTime day = pivotLocalDateTime.plusDays(i);
-                campingDateDTO.setCheckInDateTime(day);
-
-                LocalDateTime nextDay = pivotLocalDateTime.plusDays(i + 1);
-                campingDateDTO.setCheckoutDateTime(nextDay);
-
-                campingDateList.add(campingDateDTO);
+                buildAndAddCampingDTO(campingDateList, pivotLocalDateTime, i);
 
             }
         }
 
-
         return campingDateList;
+    }
+
+    private void buildAndAddCampingDTO(List<CampingDateDTO> campingDateList, LocalDateTime pivotLocalDateTime, int i) {
+        CampingDateDTO campingDateDTO = new CampingDateDTO();
+
+        LocalDateTime day = pivotLocalDateTime.plusDays(i);
+        campingDateDTO.setCheckInDateTime(day);
+
+        LocalDateTime nextDay = pivotLocalDateTime.plusDays(i + 1);
+        campingDateDTO.setCheckoutDateTime(nextDay);
+
+        campingDateList.add(campingDateDTO);
     }
 
 

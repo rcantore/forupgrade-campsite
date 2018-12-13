@@ -2,6 +2,7 @@ package com.upgrade.volcano.campsite.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 import java.time.LocalDateTime;
 
 @Entity
@@ -57,5 +58,6 @@ public class Booking extends AbstractEntity {
     public void setCheckoutDateTime(LocalDateTime checkoutDateTime) {
         this.checkoutDateTime = checkoutDateTime;
     }
+
 
 }

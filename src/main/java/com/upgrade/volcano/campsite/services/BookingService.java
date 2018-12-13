@@ -12,10 +12,15 @@ import com.upgrade.volcano.campsite.validations.BookingInThePastValidation;
 import com.upgrade.volcano.campsite.validations.BookingTooCloseValidation;
 import com.upgrade.volcano.campsite.validations.BookingValidationCondition;
 import com.upgrade.volcano.campsite.validations.DateRangeValidation;
+import org.hibernate.annotations.OptimisticLock;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.annotation.RequestScope;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -24,6 +29,8 @@ import java.util.Optional;
 
 @Service
 public class BookingService {
+    private static final Object lock = new Object();
+
     @Autowired
     BookingRepository bookingRepository;
 
@@ -79,35 +86,38 @@ public class BookingService {
         return bookingsDTO;
     }
 
-    public ResultVO createBookingForCampsiteId(BookingDTO bookingDTO, Long campsiteId) throws Exception {
-        ResultVO resultVO = validateNewBooking(bookingDTO);
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    public synchronized ResultVO createBookingForCampsiteId(final BookingDTO bookingDTO, Long campsiteId) throws Exception {
+        final ResultVO resultVO = validateNewBooking(bookingDTO);
 
         if (resultVO.getErrors().isEmpty()) {
-            Optional<Campsite> campsite = campsiteRepository.findById(campsiteId);
-            BookingDTO returnBooking = new BookingDTO();
-            if (campsite.isPresent()) {
-                Specification<Booking> spec = Specification.where(new BookingForCampsiteId(campsiteId))
-                        .and(new BookingBetweenDates(bookingDTO.getCheckInDateTime(), bookingDTO.getCheckoutDateTime()));
-                List<BookingDTO> bookingList = this.getAllBookings(spec);
+            synchronized (lock) {
+                Optional<Campsite> campsite = campsiteRepository.findById(campsiteId);
+                BookingDTO returnBooking = new BookingDTO();
+                if (campsite.isPresent()) {
+                    Specification<Booking> spec = Specification.where(new BookingForCampsiteId(campsiteId))
+                            .and(new BookingBetweenDates(bookingDTO.getCheckInDateTime(), bookingDTO.getCheckoutDateTime()));
+                    List<BookingDTO> bookingList = this.getAllBookings(spec);
 
-                if (!bookingList.isEmpty()) {
-                    // date not available error
-                    resultVO.getErrors().add("The date you provided is not available for booking");
-                } else {
+                    if (!bookingList.isEmpty()) {
+                        // date not available error
+                        resultVO.getErrors().add("The date you provided is not available for booking");
+                    } else {
 
-                    ModelMapper modelMapper = new ModelMapper();
-                    Booking booking = modelMapper.map(bookingDTO, Booking.class);
+                        ModelMapper modelMapper = new ModelMapper();
+                        Booking booking = modelMapper.map(bookingDTO, Booking.class);
 
-                    Campsite availableCampsite = campsite.get();
-                    booking.setCampsite(availableCampsite);
+                        Campsite availableCampsite = campsite.get();
+                        booking.setCampsite(availableCampsite);
 
-                    bookingRepository.save(booking);
-                    availableCampsite.getBookings().add(booking);
-                    campsiteRepository.save(availableCampsite);
+                        bookingRepository.save(booking);
+                        availableCampsite.getBookings().add(booking);
+                        campsiteRepository.save(availableCampsite);
 
-                    returnBooking = modelMapper.map(booking, BookingDTO.class);
+                        returnBooking = modelMapper.map(booking, BookingDTO.class);
 
-                    resultVO.getData().put("return", returnBooking);
+                        resultVO.getData().put("return", returnBooking);
+                    }
                 }
             }
         }
@@ -115,8 +125,8 @@ public class BookingService {
         return resultVO;
     }
 
-    private ResultVO validateNewBooking(BookingDTO bookingDTO) {
-        ResultVO resultVO = new ResultVO();
+    private synchronized ResultVO validateNewBooking(BookingDTO bookingDTO) {
+        final ResultVO resultVO = new ResultVO();
         resultVO.setErrors(new ArrayList<>());
 
         conditions.forEach(bookingValidationCondition -> {

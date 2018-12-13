@@ -13,13 +13,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestController
+@RequestScope
 public class BookingController {
 
     @Autowired
@@ -70,7 +70,7 @@ public class BookingController {
     }
 
     @PostMapping(path = "/campsites/{id}/bookings")
-    public @ResponseBody ResponseEntity createNewBookingForCampsite(@PathVariable(name = "id") Long campsiteId, @RequestBody BookingDTO booking ) {
+    public @ResponseBody ResponseEntity createNewBookingForCampsite(@PathVariable(name = "id") Long campsiteId, @RequestBody final BookingDTO booking ) {
 
         ResponseEntity responseEntity;
         try {

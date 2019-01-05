@@ -21,7 +21,7 @@ When using the command line option, it's advised to use the included gradle wrap
 This is a REST API, not fully restful, and definitely not HATEOAS.
 It has two resources entry point, one for Campsites and one for Bookings
 For simplicity purposes, the base url will be the one provided by the local default configuration: *http://localhost:8080*
-Also there's a simple swagger instalation that can be found on <http://localhost:8080/api/swagger-ui.html>
+Also there's a simple swagger installation that can be found on <http://localhost:8080/api/swagger-ui.html>
 
 ### Campsites resource
 
@@ -140,7 +140,7 @@ On a successful result (so the booking is confirmed), an HTTP 200 ok result is r
 ```
 PUT http://localhost:8080/api/campsites/1/bookings/{id}
 ```
-Where *{id}* is the id provided on the sucessful response when creating the booking
+Where *{id}* is the id provided on the successful response when creating the booking
 
 Example body:
 ```json
@@ -155,8 +155,8 @@ Example body:
 ```
 DELETE http://localhost:8080/api/campsites/1/bookings/{id}
 ```
-Where *{id}* is the id provided on the sucessful response when creating the booking
+Where *{id}* is the id provided on the successful response when creating the booking
 
-On suscessful DELETE, a 200 (ok) Status Code will be returned, on Error a 500 Internal server Error and finally, if the indicated id doesn't exist, a 404 Not found will be returned.
+On successful DELETE, a 200 (ok) Status Code will be returned, on Error a 500 Internal server Error and finally, if the indicated id doesn't exist, a 404 Not found will be returned.
 
 

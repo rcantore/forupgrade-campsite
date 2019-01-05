@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.upgrade.volcano.campsite.dtos.BookingDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +19,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -211,117 +207,6 @@ public class BookingTest {
 
         assertEquals(modifiedEmail, "different email");
 
-    }
-
-    @Test
-    public void postNewBookingsMultithreading() throws Exception {
-        StringBuilder sb = new StringBuilder()
-                .append(baseUrl)
-                .append(BOOKING_RESOURCE);
-
-        // get all bookings
-        MvcResult mvcResult = mvc.perform(get(sb.toString())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andReturn();
-
-        String strResponse = mvcResult.getResponse().getContentAsString();
-        assertNotNull(strResponse);
-
-        JSONArray json = new JSONArray(strResponse);
-        int bookingsCount = json.length();
-
-        ThreadPoolExecutor executor =
-                (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
-
-        executor.submit(() -> {
-            final BookingDTO bookingDTO = new BookingDTO();
-
-            bookingDTO.setFullName("Newbooking Creator");
-            bookingDTO.setEmail("creator@newdomain.com");
-
-            final LocalDateTime checkInTime = LocalDateTime.of(LocalDate.now().plusDays(3), LocalTime.of(12, 00));
-            bookingDTO.setCheckInDateTime(checkInTime);
-
-            final LocalDateTime checkOutTime = LocalDateTime.of(LocalDate.now().plusDays(5), LocalTime.of(12, 00));
-            bookingDTO.setCheckoutDateTime(checkOutTime);
-
-            final StringBuilder sb2 = new StringBuilder()
-                    .append(baseUrl)
-                    .append(CAMPSITE_RESOURCE).append("/")
-                    .append(DEFAULT_CAMPSITE_ID)
-                    .append(BOOKING_RESOURCE);
-            String endpoint = sb2.toString();
-
-            try {
-                synchronized (this) {
-                    MvcResult mvcResult1 = mvc.perform(post(endpoint)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookingDTO)))
-                            .andReturn();
-
-                    System.out.println("\n\nthread 1 response status: " + mvcResult1.getResponse().getStatus());
-                    System.out.println("\n\nthread 1 response content: " + mvcResult1.getResponse().getContentAsString());
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            System.out.println("\n\n\n\n\nthread end!");
-        });
-
-        executor.submit(() -> {
-            final BookingDTO bookingDTO = new BookingDTO();
-
-            bookingDTO.setFullName("Newbooking Creator");
-            bookingDTO.setEmail("creator@newdomain.com");
-
-            final LocalDateTime checkInTime = LocalDateTime.of(LocalDate.now().plusDays(5), LocalTime.of(12, 00));
-            bookingDTO.setCheckInDateTime(checkInTime);
-
-            final LocalDateTime checkOutTime = LocalDateTime.of(LocalDate.now().plusDays(6), LocalTime.of(12, 00));
-            bookingDTO.setCheckoutDateTime(checkOutTime);
-
-            final StringBuilder sb2 = new StringBuilder()
-                    .append(baseUrl)
-                    .append(CAMPSITE_RESOURCE).append("/")
-                    .append(DEFAULT_CAMPSITE_ID)
-                    .append(BOOKING_RESOURCE);
-            String endpoint = sb2.toString();
-
-            try {
-                synchronized (this) {
-                    MvcResult mvcResult1 = mvc.perform(post(endpoint)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookingDTO)))
-                            .andReturn();
-
-                    System.out.println("\n\nthread 2 response status: " + mvcResult1.getResponse().getStatus());
-                    System.out.println("\n\nthread 2 response content: " + mvcResult1.getResponse().getContentAsString());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            System.out.println("\n\n\n\n\nthread2 end!");
-        });
-
-        executor.awaitTermination(2, TimeUnit.SECONDS);
-
-        mvcResult = mvc.perform(get(sb.toString())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andReturn();
-
-        strResponse = mvcResult.getResponse().getContentAsString();
-        assertNotNull(strResponse);
-
-        json = new JSONArray(strResponse);
-        int bookingsCountAfterEnd = json.length();
-
-        //only one new booking should be added
-        Assert.assertEquals("only one new booking should be added",1, bookingsCountAfterEnd - bookingsCount);
     }
 
     public int getPort() {

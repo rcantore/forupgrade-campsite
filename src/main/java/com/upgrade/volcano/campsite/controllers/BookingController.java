@@ -107,9 +107,13 @@ public class BookingController {
             @PathVariable(name = "campsiteId") Long campsiteId,
             @PathVariable(name = "bookingId") Long bookingId) {
 
-        bookingService.deleteBookingForCampsiteId(bookingId, campsiteId);
+        boolean removed = bookingService.deleteBookingForCampsiteId(bookingId, campsiteId);
 
-        return ResponseEntity.ok().build();
+        ResponseEntity responseEntity = ResponseEntity.ok().build();
+        if(!removed) {
+            responseEntity = ResponseEntity.notFound().build();
+        }
+        return responseEntity;
     }
 
     @ExceptionHandler(InvalidFormatException.class)

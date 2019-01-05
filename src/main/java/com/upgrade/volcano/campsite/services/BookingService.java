@@ -150,17 +150,19 @@ public class BookingService {
 
     }
 
-    public void deleteBookingForCampsiteId(Long bookingId, Long campsiteId) {
+    public boolean deleteBookingForCampsiteId(Long bookingId, Long campsiteId) {
         Optional<Campsite> campsite = campsiteRepository.findById(campsiteId);
+        boolean removed = false;
         if (campsite.isPresent()) {
             Campsite availableCampsite = campsite.get();
 
-            availableCampsite.getBookings().removeIf(booking -> booking.getId() == bookingId);
-            campsiteRepository.save(availableCampsite);
-
-            bookingRepository.deleteById(bookingId);
-
+            removed = availableCampsite.getBookings().removeIf(booking -> booking.getId().equals(bookingId));
+            if (removed) {
+                campsiteRepository.save(availableCampsite);
+                bookingRepository.deleteById(bookingId);
+            }
         }
 
+        return removed;
     }
 }

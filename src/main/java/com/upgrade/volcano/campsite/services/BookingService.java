@@ -29,8 +29,6 @@ import java.util.Optional;
 
 @Service
 public class BookingService {
-    private static final Object lock = new Object();
-
     @Autowired
     BookingRepository bookingRepository;
 
@@ -86,12 +84,11 @@ public class BookingService {
         return bookingsDTO;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
-    public synchronized ResultVO createBookingForCampsiteId(final BookingDTO bookingDTO, Long campsiteId) throws Exception {
+    public ResultVO createBookingForCampsiteId(final BookingDTO bookingDTO, Long campsiteId) throws Exception {
         final ResultVO resultVO = validateNewBooking(bookingDTO);
 
         if (resultVO.getErrors().isEmpty()) {
-            synchronized (lock) {
+            synchronized (this) {
                 Optional<Campsite> campsite = campsiteRepository.findById(campsiteId);
                 BookingDTO returnBooking = new BookingDTO();
                 if (campsite.isPresent()) {
@@ -125,7 +122,7 @@ public class BookingService {
         return resultVO;
     }
 
-    private synchronized ResultVO validateNewBooking(BookingDTO bookingDTO) {
+    private ResultVO validateNewBooking(BookingDTO bookingDTO) {
         final ResultVO resultVO = new ResultVO();
         resultVO.setErrors(new ArrayList<>());
 

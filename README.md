@@ -1,16 +1,16 @@
 # For Upgrade - API Campsite Booking
 
-## About the proyect
+## About the project
 
-The proyect is IDE agnostic, it can be imported in any modern IDE that has support for Gradle builds and configurations. This is a Spring Boot application, currently only one profile is provided; a local profile with some sample data to have the app up and running for demonstration purposes.
+The project is IDE agnostic, it can be imported in any modern IDE that has support for Gradle builds and configurations. This is a Spring Boot application, currently only one profile is provided; a local profile with some sample data to have the app up and running for demonstration purposes.
 
 Also, some unit tests are provided to prove the correct API functionality.
 
-### Running the proyect
+### Running the project
 
-It can be run inside the IDE of your choise or using the gradle command line.
+It can be run inside the IDE of your choice or using the gradle command line.
 
-Whe using the command line option, it's advised to use the included gradle wrapper. Type on the root dir of the proyect:
+When using the command line option, it's advised to use the included gradle wrapper. Type on the root dir of the project:
 
 ```bash
 ./gradlew bootRun
@@ -18,10 +18,10 @@ Whe using the command line option, it's advised to use the included gradle wrapp
 
 ## About the API
 
-This is a REST API, not fully restful, and definitaly not HATEOAS.
+This is a REST API, not fully restful, and definitely not HATEOAS.
 It has two resources entry point, one for Campsites and one for Bookings
 For simplicity purposes, the base url will be the one provided by the local default configuration: *http://localhost:8080*
-Also there's a simple swagger installiont that can be found on <http://localhost:8080/api/swagger-ui.html>
+Also there's a simple swagger instalation that can be found on <http://localhost:8080/api/swagger-ui.html>
 
 ### Campsites resource
 
@@ -119,7 +119,7 @@ Example body:
 }
 ```
 
-A variety of results is returned depending on the outcame
+A variety of results is returned depending on the outcome
 
 ```
 Error code 500
@@ -134,7 +134,7 @@ Error code 500
 ["The date you provided is not available for booking"]
 ```
 
-On a sucessfull result (so the booking is confirmed), an HTTP 200 ok result is returned and in the body of the response the booking id which will be used for managing porpouses later.
+On a successful result (so the booking is confirmed), an HTTP 200 ok result is returned and in the body of the response the booking id which will be used for managing the reservation later.
 
 #### Modifying bookings
 ```
